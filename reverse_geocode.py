@@ -40,7 +40,6 @@ def get_rev_address(lat, lng,method="geopy"):
 
 def rev_geocode(ifname,sep='\t'):
 
-		
 	fin=open(ifname,'r')
 	fout=open('annotated'+ifname,'w')
 	lst=[]
@@ -62,6 +61,29 @@ def rev_geocode(ifname,sep='\t'):
 		fout.write(entry)
 	fout.close()		
 
+def rev_geocode2(ifname,sep='\t'):
+
+	fin=open(ifname,'r')
+	fout=open('annotated'+ifname,'w')
+	lst=[]
+	index=0
+	for line in fin:	
+		if 'id' not in line :
+			cellid,lat,lng=line.split(sep)
+			pov=pov.rstrip()
+			addr=get_rev_address(lat,lng, method="pygeocoder")
+			if addr is None:
+				addr=""
+			temp='{}'.format(int(cellid))
+			temp+=";"+tid+";"+lat+";"+lng+";"+addr
+			print temp
+			lst.append(temp)
+			time.sleep(0.2)	
+		index+=1	
+	for entry in lst:
+		fout.write(entry)
+	fout.close()		
+
 if __name__=='__main__':
 	ifname=sys.argv[1]
-	rev_geocode(ifname)		
+	rev_geocode2(ifname)		
