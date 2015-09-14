@@ -5,7 +5,7 @@ import time
 
 geolocator=Nominatim()
 
-def get_rev_address(lat, lng,method="geopy"):
+def get_rev_address(lat, lng,method="geopy", district_only=False):
 	string=lat+','+lng
 	if 'geopy' in method:
 		location = geolocator.reverse(string)
@@ -36,6 +36,9 @@ def get_rev_address(lat, lng,method="geopy"):
 			results+=",raw:"+rs.__str__()
 		except:
 			results+=""
+
+		if district_only:
+			return rs.county
 		return results
 
 def rev_geocode(ifname,sep='\t'):
@@ -68,14 +71,15 @@ def rev_geocode2(ifname,sep='\t'):
 	lst=[]
 	index=0
 	for line in fin:	
-		if 'id' not in line :
-			cellid,lat,lng=line.split(sep)
-			pov=pov.rstrip()
-			addr=get_rev_address(lat,lng, method="pygeocoder")
+		if 'id' not in line and 'ID' not in line :
+			cellid,lng,lat=line.split(sep)
+			lat=lat.rstrip()
+			addr=get_rev_address(lat,lng, method="pygeocoder", district_only=True)
+			print addr
 			if addr is None:
 				addr=""
-			temp='{}'.format(int(cellid))
-			temp+=";"+tid+";"+lat+";"+lng+";"+addr
+			temp='{}'.format(cellid)
+			temp+=";"+lat+";"+lng+";"+addr+'\n'
 			print temp
 			lst.append(temp)
 			time.sleep(0.2)	
@@ -86,4 +90,4 @@ def rev_geocode2(ifname,sep='\t'):
 
 if __name__=='__main__':
 	ifname=sys.argv[1]
-	rev_geocode2(ifname)		
+	rev_geocode2(ifname,sep=',')		
