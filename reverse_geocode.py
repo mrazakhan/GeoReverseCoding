@@ -47,7 +47,7 @@ def rev_geocode(ifname,sep='\t'):
 	index=0
 	for line in fin:	
 		if 'id' not in line :
-			ind,tid,lat,lng,land,land1,pop,pov=line.split('\t')
+			ind,tid,lat,lng,land,land1,pop,pov=line.split(sep)
 			pov=pov.rstrip()
 			addr=get_rev_address(lat,lng, method="pygeocoder")
 			if addr is None:
