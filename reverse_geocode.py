@@ -13,7 +13,7 @@ def get_rev_address(lat, lng,method="geopy", district_only=False):
 	else:
 		lat=float(lat)
 		lng=float(lng)
-		print str(lat)+" , "+  str(lng)
+		#print str(lat)+" , "+  str(lng)
 
 		results=""
 		try:
@@ -75,7 +75,7 @@ def rev_geocode2(ifname,sep='\t'):
 			cellid,lng,lat=line.split(sep)
 			lat=lat.rstrip()
 			addr=get_rev_address(lat,lng, method="pygeocoder", district_only=True)
-			print addr
+			#print addr
 			if addr is None:
 				addr=""
 			temp='{}'.format(cellid)
